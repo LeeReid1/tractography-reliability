@@ -19,18 +19,22 @@ First install:
 *  [MRtrix3](http://www.mrtrix.org/)
 *  [git lfs](https://www.atlassian.com/git/tutorials/git-lfs#installing-git-lfs) ***BEFORE*** cloning this directory
 
-Once these have been installed:
+
+Then, after these have been installed:
 
 ```
-cd ~/any_directory/
-git clone https://rei19q@bitbucket.csiro.au/scm/~rei19q/tractography-reliability.git
+cd ~/
+git clone https://bitbucket.csiro.au/scm/consult/tractography-reliability.git
 ```
+
+
+This installs to your home directory, but any destination directory will work.
 
 
 Example Usage
 --------------
 
-To use the provided scripts, provide them with your `track_command` in double quotes. Do not include `-select` or save-to locations in this command.
+To use the provided scripts, provide them with your track command in double quotes. Do not include `-select` or save-to locations in this command.
 
 Remember to think about your data before choosing reliability parameters. **Do not copy and paste parameters from the examples below** as they may not be suitable for your research question or data.
 
@@ -40,7 +44,7 @@ To generate a tractogram suitable for conversion into a binary mask.
  
 ```
 # Generate tractography
-python ~/any_directory/track_to_convergence_tckmap.py --resolution 2 --bint 0.001 --save_to_tck tractogram.tck  --target_dice 0.95 --track_command "tckgen fod_wm.mif -seed_image seed.nii.gz -include include.nii.gz -stop"
+python ~/tractography-reliability/track_to_convergence_tckmap.py --resolution 2 --bint 0.001 --save_to_tck tractogram.tck  --target_dice 0.95 --track_command "tckgen fod_wm.mif -seed_image seed.nii.gz -include include.nii.gz -stop"
 
 # The following steps convert the tractogram to an image and are optional. They may need to be modified to reflect your parameters and environment
 
@@ -59,7 +63,7 @@ tckmap tractogram.tck -vox 2 - | mrcalc - $binarisation_threshold -gt trackmap.n
 To generate a tractogram suitable for sampling from an image.
 
 ```
- python ~/any_directory/track_to_convergence_sample.py --save_to_tck tractogram.tck --im fa.nii.gz --sd 0.001 --track_command "tckgen fod_wm.mif -seed_image seed.nii.gz -include include.nii.gz -stop" 
+ python ~/tractography-reliability/track_to_convergence_sample.py --save_to_tck tractogram.tck --im fa.nii.gz --sd 0.001 --track_command "tckgen fod_wm.mif -seed_image seed.nii.gz -include include.nii.gz -stop" 
 ```
 
 Tips
