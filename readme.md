@@ -1,7 +1,7 @@
-Tracking Reliability
+Tractography Reliability
 ====================
 
-These tools provide a means of generating probabilistic tractography via an existing MRtrix installation. 
+These tools provide a means of generating reliable probabilistic tractography via an existing MRtrix installation. Specifically, these tools automatically perform probabilistic tractography, using MRtrix, until a tractogram becomes stable. This removes the need for researchers to choose the number of streamlines before tractography takes place, and provides confidence that tractograms have enough streamlines to be replicable.
 
 
 **Please read the installation notes before cloning this repository.**
@@ -72,8 +72,9 @@ Tips
 2. These scripts are suitable only for probabilistic tractography generated with MRtrix
 3. Some flags exist that are not part of the original paper and may help in niche situations
 4. Lowering the reliability criteria (e.g. low dice scores or high standard deviations) to achieve faster tractography is lowering the reliability of your results. Think about what your criteria mean and always report them within your methods.
-5. Trackmap Bootstrapping criteria beyond with Dice Coefficients >0.95 or with resolutions higher than your FOD image resolution will drastically increase the number of streamlines you require. 
+5. Trackmap Bootstrapping criteria with Dice Coefficients >0.95 or with resolutions higher than your FOD image resolution will drastically increase the number of streamlines you require. 
 6. Do not include `-select` or save-to locations in your commands.
+7. Executables in the LIL directory are not intended to be used directly: these contain some options that are not formally tested, documented, or supported - please use the supplied python scripts.
 
 How to report your use and cite
 -------------------------------
