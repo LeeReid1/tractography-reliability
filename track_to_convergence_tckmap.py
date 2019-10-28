@@ -36,6 +36,8 @@ def Run(save_to_tck, track_function, resolution, bint=def_bint, target_dice=def_
 		minimum_trackCount:	Minimum number of streamlines to collect
 		loc_roi:			Full path of a binary ROI in which to measure the other metrics. Streamline vertices outside this region are ignored.
 		verbose:			Whether to print informational messages
+		
+	Returns:				The number of streamlines generated
 	'''
 	
 	
@@ -44,7 +46,7 @@ def Run(save_to_tck, track_function, resolution, bint=def_bint, target_dice=def_
 		return LIL.NoStreamlinesReq(loc_save_to, resolution, binarisationThreshold=bint, target_dice=target_dice, confidence=target_confidence, loc_roi=loc_roi, verbose=verbose)
 		 
 	
-	track_to_convergence_base.Run(save_to_tck, track_function, assess_function=AssessStreamlinesReq, min_step=min_step, max_step=max_step, minimum_trackCount=minimum_trackCount, verbose=verbose)
+	return track_to_convergence_base.Run(save_to_tck, track_function, assess_function=AssessStreamlinesReq, min_step=min_step, max_step=max_step, minimum_trackCount=minimum_trackCount, verbose=verbose)
 	
 
 
