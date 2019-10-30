@@ -4,7 +4,7 @@ import os
 import argparse
 import shutil
 import gen
-import LILWrappers as LIL
+import lil_wrappers
 import track_to_convergence_base
 
 #---------PARAMS-----------
@@ -43,7 +43,7 @@ def Run(save_to_tck, track_function, resolution, bint=def_bint, target_dice=def_
 	
 	
 	def AssessStreamlinesReq(loc_save_to):
-		return LIL.NoStreamlinesReq(loc_save_to, resolution, binarisationThreshold=bint, target_dice=target_dice, confidence=target_confidence, loc_roi=loc_roi, verbose=verbose)
+		return lil_wrappers.NoStreamlinesReq(loc_save_to, resolution, binarisationThreshold=bint, target_dice=target_dice, confidence=target_confidence, loc_roi=loc_roi, verbose=verbose)
 		 
 	
 	return track_to_convergence_base.Run(save_to_tck, track_function, assess_function=AssessStreamlinesReq, min_step=min_step, max_step=max_step, minimum_trackCount=minimum_trackCount, verbose=verbose)

@@ -3,7 +3,7 @@
 import argparse
 import shutil
 import gen
-import LILWrappers as LIL
+import lil_wrappers
 
 
 #---------PARAMS-----------
@@ -56,7 +56,8 @@ def Run(save_to_tck, track_function, assess_function, min_step=def_min_step, max
 				gen.Delete(save_to_tck)
 				shutil.move(tempFileLoc, save_to_tck)
 			else:
-				LIL.TrackEdit([save_to_tck, "AppendStart", tempFileLoc, save_to_tck], verbose=False)
+				lil_wrappers.TrackEdit([save_to_tck, "AppendStart", tempFileLoc, save_to_tck], verbose=False)
+				gen.Delete(tempFileLoc)
 			noTracksSoFar = noTracksSoFar + step
 
 			# Update how many tracks we think are needed
