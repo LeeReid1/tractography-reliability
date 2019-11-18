@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 '''This script allows tracking to be performed until sampling from an image is likely to be within expected error bounds.'''
 
 import argparse

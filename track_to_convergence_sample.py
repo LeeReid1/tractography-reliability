@@ -4,8 +4,9 @@ import os
 import argparse
 import shutil
 import gen
-import LILWrappers as LIL
 import track_to_convergence_base
+import mrtrix_wrappers as mrtrix
+import numpy as np
 
 #---------PARAMS-----------
 
@@ -33,7 +34,19 @@ def Run(loc_save_to_tck, track_function, loc_image, target_sd, min_step=def_min_
 
 	
 	def AssessStreamlinesReq(loc_save_to):
-		return LIL.NoStreamlinesReq_Sample(loc_save_to, loc_image, target_sd, verbose=verbose)
+		# Measure the mean microstructural value for each streamline
+		measurements = mrtrix.TckSample(loc_save_to, loc_image, saveTo=None, stat_tck="mean", verbose=False, quiet=True)
+		
+		# Calculate the sample variance of these values
+		variance = np.var(measurements, ddof=1) # sample variance
+		
+		# Calculate approximately how many streamlines will be required, using the equation:
+		# n = (1.96*2)^2 * sample_variance / W ^ 2 
+		# where W is the desired width of the 95% confidence interval
+		width_of_95CI = target_sd * 1.96 * 2 # W
+		WSq = width_of_95CI * width_of_95CI # W^2
+		est = int(np.ceil(15.3664 * variance / WSq)) # 15.3664 is (2*1.96)^2
+		return est
 		
 	
 	track_to_convergence_base.Run(loc_save_to_tck, track_function, assess_function=AssessStreamlinesReq, min_step=min_step, max_step=max_step, minimum_trackCount=minimum_trackCount, verbose=verbose)
@@ -44,7 +57,7 @@ if __name__ == "__main__":
 	parser.add_argument("--save_to_tck", help="Where to save the track to", required=True, action="store")
 	parser.add_argument("--im", help="Full path to the image from which to sample from (e.g. the FA image)", required=True, action="store")
 	parser.add_argument("--track_command", help="Command to generate tracks (do not include any -select or save location in the command)", required=True, action="store")
-	parser.add_argument("--sd", help="The target standard deviation", required=True, action="store")
+	parser.add_argument("--sd", help="The target standard deviation", required=True, type=float, action="store")
 	parser.add_argument("--min_step", default=def_min_step, type=int, help="The minimum number of streamlines to acquire per step", action="store")
 	parser.add_argument("--max_step", default=def_max_step, type=int, help="The maximum number of streamlines to acquire per step", action="store")
 	parser.add_argument("--minimum_track_count", default=def_minimumTrackCount, type=int, help="The minimum number of streamlines to acquire", action="store")
