@@ -30,9 +30,10 @@ def Run(loc_save_to_tck, track_function, loc_image, target_sd, min_step=def_min_
 		max_step:			Maximum number of streamlines to collect each time tckgen is run
 		minimum_trackCount:	Minimum number of streamlines to collect
 		verbose:			Whether to print informational messages
+		
+	Returns:	A tuple containing the number_of_streamlines_required, number_of_streamlines_generated
 	'''
 
-	
 	def AssessStreamlinesReq(loc_save_to):
 		# Measure the mean microstructural value for each streamline
 		measurements = mrtrix.TckSample(loc_save_to, loc_image, saveTo=None, stat_tck="mean", verbose=False, quiet=True)
@@ -49,7 +50,7 @@ def Run(loc_save_to_tck, track_function, loc_image, target_sd, min_step=def_min_
 		return est
 		
 	
-	track_to_convergence_base.Run(loc_save_to_tck, track_function, assess_function=AssessStreamlinesReq, min_step=min_step, max_step=max_step, minimum_trackCount=minimum_trackCount, verbose=verbose)
+	return track_to_convergence_base.Run(loc_save_to_tck, track_function, assess_function=AssessStreamlinesReq, min_step=min_step, max_step=max_step, minimum_trackCount=minimum_trackCount, verbose=verbose)
 
 
 if __name__ == "__main__":

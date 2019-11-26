@@ -28,6 +28,7 @@ def Run(save_to_tck, track_function, assess_function, min_step=def_min_step, max
 		max_step:			Maximum number of streamlines to collect each time tckgen is run
 		minimum_trackCount:	Minimum number of streamlines to collect
 	
+	Returns:	The estimated number of streamlines required, and the number of streamlines actually generated
 	'''
 
 	noTracksSoFar = 0
@@ -69,4 +70,4 @@ def Run(save_to_tck, track_function, assess_function, min_step=def_min_step, max
 	finally:
 		gen.Delete(tempFileLoc)
 
-	return noTracksSoFar
+	return noTracksRequired, noTracksSoFar
