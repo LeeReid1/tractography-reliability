@@ -16,7 +16,8 @@ Installation
 First install:
 
 *  [Python 3](https://www.python.org/downloads/) or later, and place it in the system path.
-*  [MRtrix3](http://www.mrtrix.org/)
+*  [Numpy](https://numpy.org/) for Python 3
+*  [MRtrix3](http://www.mrtrix.org/), whose bin directory must be in the system path. Alternatively, you can set an environment variable 'MRtrix3' pointing to its bin directory
 *  [git lfs](https://www.atlassian.com/git/tutorials/git-lfs#installing-git-lfs) ***BEFORE*** cloning this directory
 
 
@@ -24,11 +25,18 @@ Then, after these have been installed:
 
 ```
 cd ~/
-git clone https://bitbucket.csiro.au/scm/consult/tractography-reliability.git
+git clone --recursive https://bitbucket.csiro.au/scm/consult/tractography-reliability.git
 ```
 
-
 This installs to your home directory, but any destination directory will work.
+
+If you fail to supply the --recursive flag when cloning, you must initialise the sub-repository like so:
+
+```
+cd ~/tractography-reliability # where you cloned this repository
+git submodule update --init --recursive
+```
+
 
 
 Example Usage
