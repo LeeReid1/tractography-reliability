@@ -1,0 +1,3 @@
+[submodule "dwi_tools"]
+	path = dwi_tools
+	url = https://bitbucket.csiro.au/scm/consult/dwi_tools.git

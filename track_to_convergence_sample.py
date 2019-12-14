@@ -3,9 +3,9 @@
 import os
 import argparse
 import shutil
-import gen
 import track_to_convergence_base
-import mrtrix_wrappers as mrtrix
+from dwi_tools import gen
+from dwi_tools import mrtrix_wrappers as mrtrix
 import numpy as np
 
 #---------PARAMS-----------
@@ -36,8 +36,14 @@ def Run(loc_save_to_tck, track_function, loc_image, target_sd, min_step=def_min_
 
 	def AssessStreamlinesReq(loc_save_to):
 		# Measure the mean microstructural value for each streamline
-		measurements = mrtrix.TckSample(loc_save_to, loc_image, saveTo=None, stat_tck="mean", verbose=False, quiet=True)
+		measurements = mrtrix.TckSample(loc_save_to, loc_image, saveTo=None, stat_tck="mean", verbose=False)
 		
+        # Remove any NaNs
+		origCount = len(measurements)
+		measurements = measurements[~np.isnan(measurements)]
+		if len(measurements) != origCount:
+			raise Exception("Image contains NANs. Remove NaNs from image.")
+
 		# Calculate the sample variance of these values
 		variance = np.var(measurements, ddof=1) # sample variance
 		

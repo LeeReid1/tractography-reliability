@@ -3,7 +3,7 @@
 import os
 import argparse
 import shutil
-import gen
+from dwi_tools import gen
 import lil_wrappers
 import track_to_convergence_base
 

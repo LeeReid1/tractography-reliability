@@ -3,7 +3,7 @@
 
 import argparse
 import shutil
-import gen
+from dwi_tools import gen
 import lil_wrappers
 
 
