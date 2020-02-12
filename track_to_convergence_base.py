@@ -63,7 +63,12 @@ def Run(save_to_tck, track_function, assess_function, min_step=def_min_step, max
 			noTracksSoFar = noTracksSoFar + step
 
 			# Update how many tracks we think are needed
-			noTracksRequired = assess_function(save_to_tck)
+			if noTracksSoFar < minimum_trackCount:
+				# Haven't hit the minimum yet
+				noTracksRequired = minimum_trackCount - noTracksSoFar
+			else:
+				# Calculate the minimum
+				noTracksRequired = assess_function(save_to_tck)
 			if verbose:
 				print("Cur Tracks: " + str(noTracksSoFar))
 				print("Predicted Tracks: " + str(noTracksRequired))
