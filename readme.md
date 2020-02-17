@@ -68,10 +68,18 @@ tckmap tractogram.tck -vox 2 - | mrcalc - $binarisation_threshold -gt trackmap.n
 
 ### Microstructural Sample Reliability
 
-To generate a tractogram suitable for sampling from an image.
+You should include every image that you intend to sample from in the tractography command, because some diffusion metrics require substantially more streamlines than others.
+
+To generate a tractogram suitable for sampling from a single image:
 
 ```
  python ~/tractography-reliability/track_to_convergence_sample.py --save_to_tck tractogram.tck --im fa.nii.gz --sd 0.001 --track_command "tckgen fod_wm.mif -seed_image seed.nii.gz -include include.nii.gz -stop" 
+```
+
+To generate a tractogram suitable for sampling from multiple images:
+
+```
+ python ~/tractography-reliability/track_to_convergence_sample.py --save_to_tck tractogram.tck --im fa.nii.gz --sd 0.001 --im md.nii.gz --sd 0.000001 --track_command "tckgen fod_wm.mif -seed_image seed.nii.gz -include include.nii.gz -stop" 
 ```
 
 Tips
