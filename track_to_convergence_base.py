@@ -47,7 +47,8 @@ def Run(save_to_tck, track_function, assess_function, min_step=def_min_step, max
 			else:
 				step = noTracksRequired - noTracksSoFar
 			
-			step = min(max_step, max(step,min_step))
+			if noTracksSoFar >= minimum_trackCount:
+				step = min(max_step, max(step,min_step))
 			
 			if verbose:
 				print("Step: " + str(step))
