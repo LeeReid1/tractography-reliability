@@ -4,13 +4,14 @@ import os
 import argparse
 import shutil
 from dwi_tools import gen
-import lil_wrappers
+import lil_wrappers as LIL
 import track_to_convergence_base
 
 #---------PARAMS-----------
 
 def_bint = 0.001 # Default binary threshold
 def_target_dice = 0.95 # Default target dice
+def_target_metricDixel = 0.95 # default target for dixels
 def_target_reliability = 0.95 # Default target reliability
 def_minimumTrackCount = 1000 # Default minimum track count. Reducing this is not recommended
 def_min_step = 1000 # Default minimum number of streamlines to collect each time tckgen is run
@@ -19,6 +20,33 @@ def_max_step = 5000 # Default maximum number of streamlines to collect each time
 #---------PARAMS END--------
 #---------METHODS--------------
 
+
+def Run_DixelTckMap(save_to_tck, track_function, resolution, loc_dixelsTextFileOrMifImage, target_metric=0.95, target_reliability=def_target_reliability, min_step=def_min_step, max_step=def_max_step, minimum_trackCount=def_minimumTrackCount, loc_roi=None, dixels_unidirectional=False, endsOnly=False, verbose=True):
+	'''Generates a track file using a provided function, stopping when convergence criteria for a dixel trackmap are met 
+	
+	Arguments:
+		save_to_tck:					Where to save the final tractogram to
+		track_function: 				A function that calls tckgen in mrtrix
+		resolution:						Trackmap resolution in mm
+		loc_dixelsTextFileOrMifImage:	The location of a text files with directions, or a mif image containing this information in the header
+		target_reliability:				Target reliability of the metric.
+		target_metric:					Targt similarity between two generated dixel maps (metric = 1 - ())
+		min_step:						Minimum number of streamlines to collect each time tckgen is run
+		max_step:						Maximum number of streamlines to collect each time tckgen is run
+		minimum_trackCount:				Minimum number of streamlines to collect
+		loc_roi:						Full path of a binary ROI in which to measure the other metrics. Streamline vertices outside this region are ignored.
+		verbose:						Whether to print informational messages
+	Returns:				The number of streamlines generated
+	'''
+	
+	if loc_dixelsTextFileOrMifImage is None:
+		raise Exception("loc_dixelsTextFileOrMifImage must be provided") # or LIL believes this is a binary map
+
+	def AssessStreamlinesReq(loc_save_to):
+		return LIL.NoStreamlinesReq(save_to_tck, resolution, target_metric=target_metric, confidence=target_reliability, loc_roi=loc_roi, loc_dixelsTextFileOrMifImage=loc_dixelsTextFileOrMifImage, dixels_unidirectional=dixels_unidirectional, endsOnly=endsOnly)
+
+
+	return track_to_convergence_base.Run(save_to_tck, track_function, assess_function=AssessStreamlinesReq, min_step=min_step, max_step=max_step, minimum_trackCount=minimum_trackCount, verbose=verbose)
 
 
 def Run(save_to_tck, track_function, resolution, bint=def_bint, target_dice=def_target_dice, target_confidence=def_target_reliability, min_step=def_min_step, max_step=def_max_step, minimum_trackCount=def_minimumTrackCount, loc_roi=None, verbose=True):
@@ -43,7 +71,7 @@ def Run(save_to_tck, track_function, resolution, bint=def_bint, target_dice=def_
 	
 	
 	def AssessStreamlinesReq(loc_save_to):
-		return lil_wrappers.NoStreamlinesReq(loc_save_to, resolution, binarisationThreshold=bint, target_dice=target_dice, confidence=target_confidence, loc_roi=loc_roi, verbose=verbose)
+		return LIL.NoStreamlinesReq(loc_save_to, resolution, binarisationThreshold=bint, target_metric=target_dice, confidence=target_confidence, loc_roi=loc_roi, verbose=verbose)
 		 
 	
 	return track_to_convergence_base.Run(save_to_tck, track_function, assess_function=AssessStreamlinesReq, min_step=min_step, max_step=max_step, minimum_trackCount=minimum_trackCount, verbose=verbose)

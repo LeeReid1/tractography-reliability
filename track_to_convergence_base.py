@@ -5,7 +5,7 @@ import argparse
 import shutil
 from dwi_tools import gen
 import lil_wrappers
-
+import mrtrix_wrappers as mrtrix
 
 #---------PARAMS-----------
 
@@ -45,7 +45,11 @@ def Run(save_to_tck, track_function, assess_function, min_step=def_min_step, max
 			elif noTracksSoFar == 0:
 				step = minimum_trackCount
 			else:
-				step = noTracksRequired - noTracksSoFar
+				# Always collect at least the minimum step size
+				# Failure to do so when the minimum steamline count has not been met results
+				# in progressively smaller steps as the seed count reduces, which is extremely inefficient
+				# and can effectively stop the minimum from ever being reached
+				step = max(noTracksRequired - noTracksSoFar, min_step)
 			
 			if noTracksSoFar >= minimum_trackCount:
 				step = min(max_step, max(step,min_step))
@@ -61,11 +65,12 @@ def Run(save_to_tck, track_function, assess_function, min_step=def_min_step, max
 			else:
 				lil_wrappers.TrackEdit([save_to_tck, "AppendStart", tempFileLoc, save_to_tck], verbose=False)
 				gen.Delete(tempFileLoc)
-			noTracksSoFar = noTracksSoFar + step
+			noTracksSoFar = mrtrix.GetTrackCount(save_to_tck, printCommands=False) # Don't assume that 'step' streamlines were actually generated
 
 			# Update how many tracks we think are needed
 			if noTracksSoFar < minimum_trackCount:
 				# Haven't hit the minimum yet
+				# Continue collecting. 
 				noTracksRequired = minimum_trackCount - noTracksSoFar
 			else:
 				# Calculate the minimum
