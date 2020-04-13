@@ -49,33 +49,51 @@ def Run_DixelTckMap(save_to_tck, track_function, resolution, loc_dixelsTextFileO
 	return track_to_convergence_base.Run(save_to_tck, track_function, assess_function=AssessStreamlinesReq, min_step=min_step, max_step=max_step, minimum_trackCount=minimum_trackCount, verbose=verbose)
 
 
-def Run(save_to_tck, track_function, resolution, bint=def_bint, target_dice=def_target_dice, target_confidence=def_target_reliability, min_step=def_min_step, max_step=def_max_step, minimum_trackCount=def_minimumTrackCount, loc_roi=None, verbose=True):
+def Run(save_to_tck, track_function, resolution, bint=def_bint, target_dice=def_target_dice, target_confidence=def_target_reliability, min_step=def_min_step, max_step=def_max_step, minimum_trackCount=def_minimumTrackCount, loc_roi=None, append_if_file_exists=False, verbose=True):
 	'''Generates a track file using a provided function, stopping when convergence criteria are met
 	
 	Arguments:
-		save_to_tck:		Where to save the final tractogram to
-		track_function: 	A function that calls tckgen in mrtrix
-		resolution:			Trackmap resolution in mm
-		bint:				Binarisation threshold; see paper for details
-		target_dice:		Target dice score; see paper for details
-		target_confidence:	Target reliability; Set at 95% in the paper
-		min_step:			Minimum number of streamlines to collect each time tckgen is run
-		max_step:			Maximum number of streamlines to collect each time tckgen is run
-		minimum_trackCount:	Minimum number of streamlines to collect
-		loc_roi:			Full path of a binary ROI in which to measure the other metrics. Streamline vertices outside this region are ignored.
-		verbose:			Whether to print informational messages
+		save_to_tck:			Where to save the final tractogram to
+		track_function: 		A function that calls tckgen in mrtrix
+		resolution:				Trackmap resolution in mm
+		bint:					Binarisation threshold; see paper for details
+		target_dice:			Target dice score; see paper for details
+		target_confidence:		Target reliability; Set at 95% in the paper
+		min_step:				Minimum number of streamlines to collect each time tckgen is run
+		max_step:				Maximum number of streamlines to collect each time tckgen is run
+		minimum_trackCount:		Minimum number of streamlines to collect
+		loc_roi:				Full path of a binary ROI in which to measure the other metrics. Streamline vertices outside this region are ignored.
+		append_if_file_exists:	If the file exists already, this appends streamlines to that file. If false, that file is overwritten. 		
+		verbose:				Whether to print informational messages
 		
-	Returns:				The number of streamlines generated
+	Returns:					The number of streamlines generated
 	'''
 	
 	
 	
 	def AssessStreamlinesReq(loc_save_to):
-		return LIL.NoStreamlinesReq(loc_save_to, resolution, binarisationThreshold=bint, target_metric=target_dice, confidence=target_confidence, loc_roi=loc_roi, verbose=verbose)
-		 
+		return AssessStreamlinesReq_Binary(loc_save_to, resolution, bint, target_dice, target_confidence, loc_roi=loc_roi, verbose=verbose)		 
 	
-	return track_to_convergence_base.Run(save_to_tck, track_function, assess_function=AssessStreamlinesReq, min_step=min_step, max_step=max_step, minimum_trackCount=minimum_trackCount, verbose=verbose)
+	return track_to_convergence_base.Run(save_to_tck, track_function, assess_function=AssessStreamlinesReq, min_step=min_step, max_step=max_step, minimum_trackCount=minimum_trackCount, append_if_file_exists=append_if_file_exists, verbose=verbose)
 	
+
+def AssessStreamlinesReq_Binary(loc_tck, resolution, bint, target_dice, target_confidence, loc_roi=None, verbose=True):
+	'''Determines how many streamlines are required to meet the specified criteria, given a sample of already-collected streamlines
+
+		Arguments:
+		loc_tck:			Location (file path) of the tractogram
+		resolution:			Trackmap resolution in mm
+		bint:				Binarisation threshold; see paper for details
+		target_dice:		Target dice score; see paper for details
+		target_confidence:	Target reliability; Set at 95% in the paper
+		loc_roi:			Full path of a binary ROI in which to measure the other metrics. Streamline vertices outside this region are ignored.
+		verbose:			Whether to print informational messages
+		
+	Returns:				The number of streamlines generated
+	'''
+
+	return LIL.NoStreamlinesReq(loc_tck, resolution, binarisationThreshold=bint, target_metric=target_dice, confidence=target_confidence, loc_roi=loc_roi, verbose=verbose)
+
 
 
 if __name__ == "__main__":

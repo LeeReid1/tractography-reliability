@@ -6,6 +6,7 @@ import shutil
 from dwi_tools import gen
 import lil_wrappers
 import mrtrix_wrappers as mrtrix
+import os
 
 #---------PARAMS-----------
 
@@ -17,7 +18,7 @@ def_max_step = 5000 # Default maximum number of streamlines to collect each time
 #---------METHODS--------------
 
 
-def Run(save_to_tck, track_function, assess_function, min_step=def_min_step, max_step=def_max_step, minimum_trackCount=def_minimumTrackCount, verbose=True):
+def Run(save_to_tck, track_function, assess_function, min_step=def_min_step, max_step=def_max_step, minimum_trackCount=def_minimumTrackCount, append_if_file_exists=False, verbose=True):
 	'''Generates a track file using a provided function, stopping when convergence criteria are met
 	
 	Arguments:
@@ -27,14 +28,22 @@ def Run(save_to_tck, track_function, assess_function, min_step=def_min_step, max
 		min_step:			Minimum number of streamlines to collect each time tckgen is run
 		max_step:			Maximum number of streamlines to collect each time tckgen is run
 		minimum_trackCount:	Minimum number of streamlines to collect
+		append_if_file_exists:	If the file exists already, this appends streamlines to that file. If false, that file is overwritten. 
 	
 	Returns:	The estimated number of streamlines required, and the number of streamlines actually generated
 	'''
 
-	noTracksSoFar = 0
+	if append_if_file_exists and os.path.exists(save_to_tck):
+		# The tck file already exists. We will continue adding streamlines to this file
+		if verbose:
+			print("tck file found. Any additional streamlines will be appended to this file")
+		noTracksSoFar = mrtrix.GetTrackCount(save_to_tck, printCommands=False)
+		noTracksRequired = max(minimum_trackCount, assess_function(save_to_tck))
+	else:
+		noTracksSoFar = 0
+		noTracksRequired = minimum_trackCount
 
 	tempFileLoc = gen.GetTempfileName(suffix="tck")
-	noTracksRequired = minimum_trackCount
 
 	try:
 		while True:
@@ -78,6 +87,17 @@ def Run(save_to_tck, track_function, assess_function, min_step=def_min_step, max
 			if verbose:
 				print("Cur Tracks: " + str(noTracksSoFar))
 				print("Predicted Tracks: " + str(noTracksRequired))
+
+			
+			# Check that tractography is actually generating streamlines
+			if noTracksSoFar == 0:
+				# Prevent an infinite loop
+				message = "Streamline generation does not appear to be working. Check ROIs, unset -seeds if it is set"
+				if minimum_trackCount < 1000:
+					# if this is very low, we can generate zero streamlines simply by chance
+					message = message + " and set minimum_trackCount to at least 1000"
+				raise Exception(message)
+			
 	finally:
 		gen.Delete(tempFileLoc)
 
