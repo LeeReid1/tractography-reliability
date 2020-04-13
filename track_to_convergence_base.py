@@ -80,7 +80,7 @@ def Run(save_to_tck, track_function, assess_function, min_step=def_min_step, max
 			if noTracksSoFar < minimum_trackCount:
 				# Haven't hit the minimum yet
 				# Continue collecting. 
-				noTracksRequired = minimum_trackCount - noTracksSoFar
+				noTracksRequired = minimum_trackCount
 			else:
 				# Calculate the minimum
 				noTracksRequired = assess_function(save_to_tck)
