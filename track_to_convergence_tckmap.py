@@ -63,7 +63,7 @@ def Run(save_to_tck, track_function, resolution, bint=def_bint, target_dice=def_
 		max_step:				Maximum number of streamlines to collect each time tckgen is run
 		minimum_trackCount:		Minimum number of streamlines to collect
 		loc_roi:				Full path of a binary ROI in which to measure the other metrics. Streamline vertices outside this region are ignored.
-		append_if_file_exists:	If the file exists already, this appends streamlines to that file. If false, that file is overwritten. 		
+		append_if_file_exists:	If the file exists already, this appends streamlines to that file. If false, that file is overwritten.
 		verbose:				Whether to print informational messages
 		
 	Returns:					The number of streamlines generated
@@ -108,6 +108,7 @@ if __name__ == "__main__":
 	parser.add_argument("--min_step", default=def_min_step, type=int, help="The minimum number of streamlines to acquire per step", action="store")
 	parser.add_argument("--max_step", default=def_max_step, type=int, help="The maximum number of streamlines to acquire per step", action="store")
 	parser.add_argument("--minimum_track_count", default=def_minimumTrackCount, type=int, help="The minimum number of streamlines to acquire", action="store")
+	parser.add_argument("--append", help="Append to the existing file, rather than overwriting it", action="store_true")
 	parser.add_argument("--quiet", help="Hide informational messages", action="store_true")
 
 	args = parser.parse_args()
@@ -116,4 +117,4 @@ if __name__ == "__main__":
 	def Track(loc_to, noTracks):
 		gen.Run([args.track_command, "-select", str(noTracks), "-force", loc_to], printCommands=(not args.quiet))
 
-	Run(save_to_tck=args.save_to_tck, resolution=args.resolution, track_function=Track, bint=args.bint, target_dice=args.target_dice, target_confidence=args.target_confidence, min_step=args.min_step, max_step=args.max_step, minimum_trackCount=args.minimum_track_count, loc_roi=args.roi, verbose=(not args.quiet))
+	Run(save_to_tck=args.save_to_tck, resolution=args.resolution, track_function=Track, bint=args.bint, target_dice=args.target_dice, target_confidence=args.target_confidence, min_step=args.min_step, max_step=args.max_step, minimum_trackCount=args.minimum_track_count, loc_roi=args.roi, append_if_file_exists=args.append, verbose=(not args.quiet))

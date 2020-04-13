@@ -18,18 +18,19 @@ def_max_step = 5000 # Default maximum number of streamlines to collect each time
 #---------METHODS--------------
 
 
-def Run(loc_save_to_tck, track_function, loc_image, target_sd, min_step=def_min_step, max_step=def_max_step, minimum_trackCount=def_minimumTrackCount, verbose=True):
+def Run(loc_save_to_tck, track_function, loc_image, target_sd, min_step=def_min_step, max_step=def_max_step, minimum_trackCount=def_minimumTrackCount, append_if_file_exists=False, verbose=True):
 	'''Generates a track file using a provided function, stopping when convergence criteria are met
 	
 	Arguments:
-		loc_save_to_tck:	Where to save the final tractogram to
-		track_function: 	A function that calls tckgen in mrtrix
-		loc_image:			The location of the image to sample from, or a list of such locations
-		target_sd:			The target standard deviation, or a list of these if supplying a list for loc_image
-		min_step:			Minimum number of streamlines to collect each time tckgen is run
-		max_step:			Maximum number of streamlines to collect each time tckgen is run
-		minimum_trackCount:	Minimum number of streamlines to collect
-		verbose:			Whether to print informational messages
+		loc_save_to_tck:		Where to save the final tractogram to
+		track_function: 		A function that calls tckgen in mrtrix
+		loc_image:				The location of the image to sample from, or a list of such locations
+		target_sd:				The target standard deviation, or a list of these if supplying a list for loc_image
+		min_step:				Minimum number of streamlines to collect each time tckgen is run
+		max_step:				Maximum number of streamlines to collect each time tckgen is run
+		minimum_trackCount:		Minimum number of streamlines to collect
+		append_if_file_exists:	If the file exists already, this appends streamlines to that file. If false, that file is overwritten.
+		verbose:				Whether to print informational messages
 		
 	Returns:	A tuple containing the number_of_streamlines_required, number_of_streamlines_generated
 	'''
@@ -91,7 +92,7 @@ def Run(loc_save_to_tck, track_function, loc_image, target_sd, min_step=def_min_
 		return est
 		
 	
-	return track_to_convergence_base.Run(loc_save_to_tck, track_function, assess_function=AssessStreamlinesReq, min_step=min_step, max_step=max_step, minimum_trackCount=minimum_trackCount, verbose=verbose)
+	return track_to_convergence_base.Run(loc_save_to_tck, track_function, assess_function=AssessStreamlinesReq, min_step=min_step, max_step=max_step, minimum_trackCount=minimum_trackCount, append_if_file_exists=append_if_file_exists, verbose=verbose)
 
 
 if __name__ == "__main__":
@@ -103,6 +104,7 @@ if __name__ == "__main__":
 	parser.add_argument("--min_step", default=def_min_step, type=int, help="The minimum number of streamlines to acquire per step", action="store")
 	parser.add_argument("--max_step", default=def_max_step, type=int, help="The maximum number of streamlines to acquire per step", action="store")
 	parser.add_argument("--minimum_track_count", default=def_minimumTrackCount, type=int, help="The minimum number of streamlines to acquire", action="store")
+    parser.add_argument("--append", help="Append to the existing file, rather than overwriting it", action="store_true")
 	parser.add_argument("--quiet", help="Hide informational messages", action="store_true")
 
 	args = parser.parse_args()
@@ -114,4 +116,4 @@ if __name__ == "__main__":
 	def Track(loc_to, noTracks):
 		gen.Run([args.track_command, "-select", str(noTracks), "-force", loc_to], printCommands=(not args.quiet))
 
-	Run(loc_save_to_tck=args.save_to_tck, track_function=Track, loc_image=args.im, target_sd=args.sd, min_step=args.min_step, max_step=args.max_step, minimum_trackCount=args.minimum_track_count, verbose=(not args.quiet))
+	Run(loc_save_to_tck=args.save_to_tck, track_function=Track, loc_image=args.im, target_sd=args.sd, min_step=args.min_step, max_step=args.max_step, minimum_trackCount=args.minimum_track_count, append_if_file_exists=args.append, verbose=(not args.quiet))
