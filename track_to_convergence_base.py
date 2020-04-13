@@ -38,7 +38,7 @@ def Run(save_to_tck, track_function, assess_function, min_step=def_min_step, max
 		if verbose:
 			print("tck file found. Any additional streamlines will be appended to this file")
 		noTracksSoFar = mrtrix.GetTrackCount(save_to_tck, printCommands=False)
-		noTracksRequired = max(minimum_trackCount, assess_function(save_to_tck))
+		noTracksRequired = max(minimum_trackCount, assess_function(save_to_tck)) if noTracksSoFar > 1 else minimum_trackCount #else statement avoids mrtrix crashing bug
 	else:
 		noTracksSoFar = 0
 		noTracksRequired = minimum_trackCount

@@ -104,7 +104,7 @@ if __name__ == "__main__":
 	parser.add_argument("--min_step", default=def_min_step, type=int, help="The minimum number of streamlines to acquire per step", action="store")
 	parser.add_argument("--max_step", default=def_max_step, type=int, help="The maximum number of streamlines to acquire per step", action="store")
 	parser.add_argument("--minimum_track_count", default=def_minimumTrackCount, type=int, help="The minimum number of streamlines to acquire", action="store")
-    parser.add_argument("--append", help="Append to the existing file, rather than overwriting it", action="store_true")
+	parser.add_argument("--append", help="Append to the existing file, rather than overwriting it", action="store_true")
 	parser.add_argument("--quiet", help="Hide informational messages", action="store_true")
 
 	args = parser.parse_args()
