@@ -65,7 +65,7 @@ def Run(save_to_tck, track_function, assess_function, min_step=def_min_step, max
 			
 			if verbose:
 				print("Step: " + str(step))
-			track_function(tempFileLoc, step)
+			track_function(tempFileLoc, int(step))
 
 			# Append to the existing result
 			if noTracksSoFar == 0:
