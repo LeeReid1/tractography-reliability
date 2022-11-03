@@ -25,7 +25,7 @@ Then, after these have been installed:
 
 ```
 cd ~/
-git clone --recursive https://bitbucket.csiro.au/scm/consult/tractography-reliability.git
+git clone --recursive https://github.com/LeeReid1/tractography-reliability.git
 ```
 
 This installs to your home directory, but any destination directory will work.
@@ -44,7 +44,7 @@ Example Usage
 
 To use the provided scripts, provide them with your track command in double quotes. Do not include `-select` or save-to locations in this command.
 
-Remember to think about your data before choosing reliability parameters. **Do not copy and paste parameters from the examples below** as they may not be suitable for your research question or data.
+Remember to think about your data before choosing reliability parameters. **Do not copy and paste parameters from the examples below without consideration** as they may not be suitable for your research question or data.
 
 ### Tractogram Bootstrapping:
 
