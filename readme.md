@@ -96,10 +96,10 @@ How to report your use and cite
 -------------------------------
 
 ### Citation:
-Please cite:
+
 Lee B. Reid, Marcela I. Cespedes, Kerstin Pannek (2020). How many streamlines are required for reliable probabilistic tractography? Solutions for microstructural measurements and neurosurgical planning. _NeuroImage_ (211). doi: https://doi.org/10.1016/j.neuroimage.2020.116646
 
-### Tractogram Bootstrapping:
+### Tractogram Bootstrapping
 Suggested example:
 
 >Streamline generation was performed until Tractogram Bootstrapping [cite] stability criteria were met (min Dice, 0.95; reliability, 0.95; 1mm isotropic; b<sub>int</sub>, 0.001×n).
