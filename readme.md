@@ -9,9 +9,28 @@ These tools provide a means of generating reliable probabilistic tractography vi
 
 All instructions are supplied for a Linux environment. For help with Windows environments, please contact us.
 
-Installation
+Installation using Docker (recommended)
+-----------
+
+If you're comfortable using docker, then install docker and run the following line in your terminal:
+
+```
+docker build https://raw.githubusercontent.com/LeeReid1/tractography-reliability/master/dockerfile -t mrtrix-with-tractography-reliability
+```
+
+This will build a image called _mrtrix-with-tractography-reliability_ containing working code and MRtrix 3. This image is based on a base image provided by the MRtrix team (https://hub.docker.com/r/mrtrix3/mrtrix3/tags) that includes some extras such as FSL.
+
+You can then create a docker container, mount your data directory, and use the tool (see below) by using a normal docker command like:
+
+```
+docker run -it -v /path-to-your-data/:/mount/data -w /mount/data mrtrix-with-tractography-reliability
+```
+
+
+Installation without using Docker
 ------------
 
+These instructions are only if you do not want to use Docker.
 
 First install:
 
@@ -45,6 +64,8 @@ Example Usage
 To use the provided scripts, provide them with your track command in double quotes. Do not include `-select` or save-to locations in this command.
 
 Remember to think about your data before choosing reliability parameters. **Do not copy and paste parameters from the examples below without consideration** as they may not be suitable for your research question or data.
+
+Remember that if you used Docker for the installation, you'll need to be inside your docker image to use the code below(!).
 
 ### Tractogram Bootstrapping:
 
